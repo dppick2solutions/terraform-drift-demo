@@ -1,6 +1,6 @@
 resource "azurerm_resource_group" "default" {
   name     = "terraform-drift-demo"
-  location = "eastus"
+  location = "eastus2"
 }
 
 resource "azurerm_service_plan" "default" {
