@@ -1,14 +1,15 @@
-name: Deploy Infrastructure
+name: "Detect Drift in Infrastructure"
 
 on:
-    push:
-        branches: 
-            - main
-        
+    schedule:
+      - cron: "0 12 * * *"
+    workflow_dispatch: 
+
 permissions: write-all
 
 jobs:
-    deploy:
+    terraform-drift-check:
+        name: "Terraform Drift Detection"
         runs-on: ubuntu-latest
         environment: main
         steps:
@@ -41,15 +42,24 @@ jobs:
                 ARM_TENANT_ID: ${{ vars.ARM_TENANT_ID }}
                 TF_VAR_azure_subscription_id: ${{ vars.ARM_SUBSCRIPTION_ID }}
                 TF_VAR_azure_client_id: ${{ vars.ARM_CLIENT_ID }}
-              run: terraform plan
+              run: terraform plan -detailed-exit-code
+
+            - name: Notify Google Chat of Failure
+              uses: google-github-actions/send-google-chat-webhook@v0.0.2
+              if: steps.plan.outputs.exitcode == 2
+              with:
+                webhook_url: ${{ secrets.GCHAT_WEBHOOK_URL }}
+                mention: <users/devante@pick2solutions.com>
 
             - name: Approve Terraform Plan
               uses: trstringer/manual-approval@v1
+              if: steps.plan.outputs.exitcode == 2
               with:
                 secret: ${{ github.token }}
                 approvers: dppick2solutions
 
             - name: Terraform Apply
+              if: steps.plan.outputs.exitcode == 2
               env:
                 ARM_CLIENT_ID: ${{ vars.ARM_CLIENT_ID }}
                 ARM_SUBSCRIPTION_ID: ${{ vars.ARM_SUBSCRIPTION_ID }}
@@ -57,3 +67,4 @@ jobs:
                 TF_VAR_azure_subscription_id: ${{ vars.ARM_SUBSCRIPTION_ID }}
                 TF_VAR_azure_client_id: ${{ vars.ARM_CLIENT_ID }}
               run: terraform apply
+
