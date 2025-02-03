@@ -12,7 +12,7 @@ resource "azurerm_service_plan" "default" {
 }
 
 resource "azurerm_storage_account" "storage" {
-  name                     = "linuxfunctionappsa"
+  name                     = "p2tfdrift"
   resource_group_name      = azurerm_resource_group.default.name
   location                 = azurerm_resource_group.default.location
   account_tier             = "Standard"
@@ -20,7 +20,7 @@ resource "azurerm_storage_account" "storage" {
 }
 
 resource "azurerm_linux_function_app" "app" {
-  name                = "my-func-app"
+  name                = "p2tfdriftfunc"
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
 
