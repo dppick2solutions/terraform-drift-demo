@@ -1,10 +1,10 @@
 resource "azurerm_resource_group" "default" {
-  name     = "terraform-drift-demo"
+  name     = "terraform-drift"
   location = "centralus"
 }
 
 resource "azurerm_service_plan" "default" {
-  name                = "terraform-drift-demo-asp"
+  name                = "terraform-drift-asp"
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
   os_type             = "Linux"
@@ -12,7 +12,7 @@ resource "azurerm_service_plan" "default" {
 }
 
 resource "azurerm_storage_account" "storage" {
-  name                     = "p2tfdrift"
+  name                     = "p2driftstorage"
   resource_group_name      = azurerm_resource_group.default.name
   location                 = azurerm_resource_group.default.location
   account_tier             = "Standard"
@@ -20,7 +20,7 @@ resource "azurerm_storage_account" "storage" {
 }
 
 resource "azurerm_linux_function_app" "app" {
-  name                = "p2tfdriftfunc"
+  name                = "p2driftfunction"
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
 
