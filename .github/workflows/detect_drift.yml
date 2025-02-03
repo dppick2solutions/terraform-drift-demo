@@ -36,6 +36,7 @@ jobs:
               run: terraform init -backend-config="backend.conf"
 
             - name: Terraform Plan
+              id: plan
               env:
                 ARM_CLIENT_ID: ${{ vars.ARM_CLIENT_ID }}
                 ARM_SUBSCRIPTION_ID: ${{ vars.ARM_SUBSCRIPTION_ID }}
