@@ -1,4 +1,4 @@
-name: "Detect Drift in Infrastructure"
+name: Detect Drift in Infrastructure
 
 on:
     schedule:
